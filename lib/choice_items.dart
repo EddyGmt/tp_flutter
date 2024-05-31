@@ -21,12 +21,12 @@ class _ChoiceItemsState extends State<ChoiceItems> {
   ];
   List<String> selectedChoices = [];
 
-  void toggleSelection(String choice, bool selected) {
+  void toggleSelection(String choice) {
     setState(() {
-      if (selected) {
-        selectedChoices.add(choice);
-      } else {
+      if (selectedChoices.contains(choice)) {
         selectedChoices.remove(choice);
+      } else {
+        selectedChoices.add(choice);
       }
       widget.onSelectionChanged(selectedChoices);
     });
@@ -37,12 +37,28 @@ class _ChoiceItemsState extends State<ChoiceItems> {
     return Wrap(
       spacing: 8.0,
       children: choices.map((choice) {
-        return ChoiceChip(
-          label: Text(choice),
-          selected: selectedChoices.contains(choice),
-          onSelected: (selected) {
-            toggleSelection(choice, selected);
+        final isSelected = selectedChoices.contains(choice);
+        return GestureDetector(
+          onTap: () {
+            toggleSelection(choice);
           },
+          child: Container(
+            margin: EdgeInsets.symmetric(vertical: 1.5),
+            padding: EdgeInsets.symmetric(horizontal: 7.0, vertical: 8.0),
+            decoration: BoxDecoration(
+              color: isSelected ? Colors.amber : Colors.grey.shade200,
+              borderRadius: BorderRadius.circular(12.0),
+              border: Border.all(
+                color: isSelected ? Colors.amber : Colors.transparent,
+              ),
+            ),
+            child: Text(
+              choice,
+              style: TextStyle(
+                color: isSelected ? Colors.black : Colors.black87,
+              ),
+            ),
+          ),
         );
       }).toList(),
     );
